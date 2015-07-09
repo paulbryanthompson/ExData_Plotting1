@@ -3,7 +3,8 @@
 ##download.file(fileUrl, destfile = "household_power_consumption.zip")
 library(dplyr)
 library(lubridate)
-library(data.table)
+library(datasets)
+
 dt_hhp <- read.table("household_power_consumption.txt", header = TRUE, sep=";", stringsAsFactors = FALSE
                 , na.strings = "?")
 dt_hhp$Global_active_power <- as.numeric(dt_hhp$Global_active_power)
@@ -20,5 +21,6 @@ dt_test <- dt_hhp
 dt_test$Weekday <- lubridate::wday(dt_test$Datetime, label = TRUE, abbr = TRUE)
 dt_subset <- subset(dt_test, Date == "2/2/2007" | Date == "1/2/2007")
 hist(dt_subset$Global_active_power, main = "Global Active Power", xlab = "Global Active Power (kilowatts)", col = "red")
-
+dev.copy(png, file="plot1.png")
+dev.off()
 
