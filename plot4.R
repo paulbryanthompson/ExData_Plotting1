@@ -1,4 +1,4 @@
-## R script for plot 1
+## R script for plot 4
 ##fileUrl <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip?accessType=DOWNLOAD"
 ##download.file(fileUrl, destfile = "household_power_consumption.zip")
 library(dplyr)

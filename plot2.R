@@ -1,4 +1,5 @@
-## R script for plot 1
+## R script for plot 2
+##only uncomment the next two lines when downloading the data for the first time!
 ##fileUrl <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip?accessType=DOWNLOAD"
 ##download.file(fileUrl, destfile = "household_power_consumption.zip")
 library(dplyr)
@@ -37,6 +38,6 @@ with(dt_subset, plot(Global_active_power, type = "l", xlab = "", ylab = "Global 
 axis(1, c(1, 1440, 2880), c("Thu", "Fri", "Sat"))
 axis(2, c(0, 2, 4, 6), c("0", "2", "4", "6"))
 
-##export to pdf
+##export to png
 dev.copy(png, file="plot2.png")
 dev.off()
