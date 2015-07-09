@@ -5,8 +5,13 @@ library(dplyr)
 library(lubridate)
 library(datasets)
 
+##read table to data frame.
+##used read.table instead of fread since POSIXlt is not compatible with data.tables
+##ensure strings are not converted to factors
 dt_hhp <- read.table("household_power_consumption.txt", header = TRUE, sep=";", stringsAsFactors = FALSE
                      , na.strings = "?")
+
+##convert fields to numeric.
 dt_hhp$Global_active_power <- as.numeric(dt_hhp$Global_active_power)
 dt_hhp$Global_reactive_power <- as.numeric(dt_hhp$Global_reactive_power)
 dt_hhp$Voltage <- as.numeric(dt_hhp$Voltage)
@@ -14,12 +19,24 @@ dt_hhp$Global_intensity <- as.numeric(dt_hhp$Global_intensity)
 dt_hhp$Sub_metering_1 <- as.numeric(dt_hhp$Sub_metering_1)
 dt_hhp$Sub_metering_2 <- as.numeric(dt_hhp$Sub_metering_2)
 dt_hhp$Sub_metering_3 <- as.numeric(dt_hhp$Sub_metering_3)
+
+##create new field by combining date and time
+##convert this to POSIXlt to easily determine day of week
 dt_hhp$Datetime <- paste(dt_hhp$Date, dt_hhp$Time)
 dt_hhp$Datetime <- strptime(dt_hhp$Datetime, "%d/%m/%Y %H:%M:%S")
+dt_hhp$Weekday <- lubridate::wday(dt_hhp$Datetime, label = TRUE, abbr = TRUE)
 
-dt_test <- dt_hhp
-dt_test$Weekday <- lubridate::wday(dt_test$Datetime, label = TRUE, abbr = TRUE)
-dt_subset <- subset(dt_test, Date == "2/2/2007" | Date == "1/2/2007")
-hist(dt_subset$Global_active_power, main = "Global Active Power", xlab = "Global Active Power (kilowatts)", col = "red")
-dev.copy(png, file="plot1.png")
+##subset the data to plot
+dt_subset <- subset(dt_hhp, Date == "2/2/2007" | Date == "1/2/2007")
+
+##contruct the line chart
+with(dt_subset, plot(Global_active_power, type = "l", xlab = "", ylab = "Global Active Power (kilowatts)", xaxt = "n"))
+
+##set axis labels at start of each day using (60*24 = 1440), since measurements are
+##taken every minute
+axis(1, c(1, 1440, 2880), c("Thu", "Fri", "Sat"))
+axis(2, c(0, 2, 4, 6), c("0", "2", "4", "6"))
+
+##export to pdf
+dev.copy(png, file="plot2.png")
 dev.off()
